@@ -9,7 +9,7 @@ const globalError = (
 ) => {
   res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
     success: false,
-    message: err.name || "Internal server error",
+    message: err.message || err.name || "Internal server error",
     error: err,
   });
 };
