@@ -38,7 +38,10 @@ const loginUser = async (payload: { email: string; password: string }) => {
 const refreshToken = async (token: string) => {
   let decodedData;
   try {
-    decodedData = jwtHelper.verifyToken(token, "refreshSecret");
+    decodedData = jwtHelper.verifyToken(
+      token,
+      configs.jwt.jwt_refresh_secret as Secret
+    );
   } catch (error) {
     throw new Error("You are not authorized");
   }
@@ -50,8 +53,8 @@ const refreshToken = async (token: string) => {
   }
   const accessToken = jwtHelper.generatToken(
     { email: isUserExist.email, role: isUserExist.role },
-    "secret",
-    "5m"
+    configs.jwt.jwt_secret as Secret,
+    configs.jwt.jwt_expires_in
   );
 
   return {
