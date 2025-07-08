@@ -50,18 +50,30 @@ const changePassword = catchAsych(
 );
 
 const forgetPassword = catchAsych(async (req, res) => {
-  const result = await authServices.forgetPassword(req.body);
+  await authServices.forgetPassword(req.body);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Forget password successfully",
-    data: result,
+    message: "Forget password successfully ! Check your email",
+    data: null,
   });
-})
+});
+
+const resetPassword = catchAsych(async (req, res) => {
+  const token=req.headers.authorization||""
+  await authServices.resetPassword(token,req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Reset password successfully",
+    data: null,
+  });
+});
 
 export const authController = {
   loginUser,
   refreshToken,
   changePassword,
   forgetPassword,
+  resetPassword,
 };
