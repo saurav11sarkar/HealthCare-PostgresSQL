@@ -1,3 +1,4 @@
+import { Request } from "express";
 import catchAsych from "../../../shared/catchAsycn";
 import sendResponse from "../../../shared/sendResponse";
 import { authServices } from "./auth.service";
@@ -24,7 +25,7 @@ const loginUser = catchAsych(async (req, res) => {
 });
 
 const refreshToken = catchAsych(async (req, res) => {
-  const {refeshToken} = req.cookies;
+  const { refeshToken } = req.cookies;
 
   const result = await authServices.refreshToken(refeshToken);
   sendResponse(res, {
@@ -35,7 +36,32 @@ const refreshToken = catchAsych(async (req, res) => {
   });
 });
 
+const changePassword = catchAsych(
+  async (req: Request & { user?: any }, res) => {
+    const user = req.user;
+    const result = await authServices.changePassword(user, req.body);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Change password successfully",
+      data: result,
+    });
+  }
+);
+
+const forgetPassword = catchAsych(async (req, res) => {
+  const result = await authServices.forgetPassword(req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Forget password successfully",
+    data: result,
+  });
+})
+
 export const authController = {
   loginUser,
   refreshToken,
+  changePassword,
+  forgetPassword,
 };
